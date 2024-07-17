@@ -5,28 +5,44 @@ pipeline {
   }
   environment {
     DOCKERHUB_CREDENTIALS = credentials('dh_id')
+    APP_NAME = "shereenfarag/dso-lab"
   }
   stages {
     stage('BUILD') {
       steps {
-        sh 'docker build -t shereenfarag/dso-lab:test-trivy .'
+        sh "docker build -t $APP_NAME:test-trivy ."
       }
     }
     stage('LOGIN') {
       steps {
-        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+        sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
       }
-    }
 
-    stage('TRIVY FS SCAN') {
+    stage('TRIVY SCAN') {
       steps {
-        sh "trivy fs . > trivyfs.txt"
+        script{
+          // Run Trivy to scan the Docker image
+          def trivyOutput = sh(script: "trivy image $APP_NAME:latest", returnStdout: true).trim()
+
+          // Display Trivy scan results
+          println trivyOutput
+
+          // Check if vulnerabilities were found
+          if (trivyOutput.contains("Total: 0")) {
+              echo "No vulnerabilities found in the Docker image."
+          } else {
+              echo "Vulnerabilities found in the Docker image."
+              // You can take further actions here based on your requirements
+              // For example, failing the build if vulnerabilities are found
+              // error "Vulnerabilities found in the Docker image."
+          }
+        }
       }
     }
   
     stage('PUSH') {
       steps {
-        sh 'docker push shereenfarag/dso-lab:test-trivy'
+        sh "docker push $APP_NAME:test-trivy"
       }
     }
 }
