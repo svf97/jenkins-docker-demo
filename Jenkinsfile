@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('BUILD') {
       steps {
-        sh 'docker build -t shereenfarag/dso-lab:latest .'
+        sh 'docker build -t shereenfarag/dso-lab:test-owasp .'
       }
     }
     stage('LOGIN') {
@@ -24,30 +24,11 @@ pipeline {
       }
     }
 
-    // stage('TRIVY FS SCAN') {
-    //   steps {
-    //     sh "trivy fs . > trivyfs.txt"
-    //   }
-    // }
-    
     stage('PUSH') {
       steps {
-        sh 'docker push shereenfarag/dso-lab:latest'
+        sh 'docker push shereenfarag/dso-lab:test-owasp'
       }
     }
-  
-    // stage("TRIVY"){
-    //   steps{
-    //     sh "trivy image shereenfarag/dso-lab:latest > trivy.txt"
-    //     }
-    // }
-
-    // stage('DEPLOY'){
-    //   steps{
-    //     sh 'docker run -d --name dso-lab -p 3000:3000 shereenfarag/dso-lab:latest'
-    //     }
-    // }
-
 }
   post {
     always {
