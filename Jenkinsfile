@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('BUILD') {
       steps {
-        sh 'docker build -t shereenfarag/dso-lab:test-owasp .'
+        sh 'docker build -t shereenfarag/dso-lab:test-trivy .'
       }
     }
     stage('LOGIN') {
@@ -17,16 +17,16 @@ pipeline {
         sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
       }
     }
-    stage ('OWASP Dependency-Check Vulnerabilities') {
+
+    stage('TRIVY FS SCAN') {
       steps {
-        dependencyCheck additionalArguments: ''' -o "./" -s "./" -f "ALL" --prettyPrint''', odcInstallation: 'OWASP-DC'
-        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+        sh "trivy fs . > trivyfs.txt"
       }
-    }     
+    }
   
     stage('PUSH') {
       steps {
-        sh 'docker push shereenfarag/dso-lab:test-owasp'
+        sh 'docker push shereenfarag/dso-lab:test-trivy'
       }
     }
 }
