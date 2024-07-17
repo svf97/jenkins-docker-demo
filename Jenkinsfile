@@ -17,13 +17,13 @@ pipeline {
         sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
       }
     }
-    stage('OWASP FS SCAN') {
+    stage ('OWASP Dependency-Check Vulnerabilities') {
       steps {
-        dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
-        dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+        dependencyCheck additionalArguments: ''' -o "./" -s "./" -f "ALL" --prettyPrint''', odcInstallation: 'OWASP-DC'
+        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
       }
-    }
-
+    }     
+  
     stage('PUSH') {
       steps {
         sh 'docker push shereenfarag/dso-lab:test-owasp'
