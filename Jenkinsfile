@@ -24,11 +24,11 @@ pipeline {
       }
     }
 
-    stage('TRIVY FS SCAN') {
-      steps {
-        sh "trivy fs . > trivyfs.txt"
-      }
-    }
+    // stage('TRIVY FS SCAN') {
+    //   steps {
+    //     sh "trivy fs . > trivyfs.txt"
+    //   }
+    // }
     
     stage('PUSH') {
       steps {
@@ -36,17 +36,17 @@ pipeline {
       }
     }
   
-    stage("TRIVY"){
-      steps{
-        sh "trivy image shereenfarag/dso-lab:latest > trivy.txt"
-        }
-    }
+    // stage("TRIVY"){
+    //   steps{
+    //     sh "trivy image shereenfarag/dso-lab:latest > trivy.txt"
+    //     }
+    // }
 
-    stage('DEPLOY'){
-      steps{
-        sh 'docker run -d --name dso-lab -p 3000:3000 shereenfarag/dso-lab:latest'
-        }
-    }
+    // stage('DEPLOY'){
+    //   steps{
+    //     sh 'docker run -d --name dso-lab -p 3000:3000 shereenfarag/dso-lab:latest'
+    //     }
+    // }
 
 }
   post {
