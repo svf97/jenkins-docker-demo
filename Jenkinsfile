@@ -45,6 +45,11 @@ pipeline {
         sh "docker push $APP_NAME:test-trivy"
       }
     }
+    stage('DEPLOY'){
+      steps{
+        sh 'docker run -d --name dso-lab -p 3000:3000 shereenfarag/dso-lab:latest'
+        }
+    }
 }
 
   post {
