@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'docker build -t shereenfarag/DSO-Lab:latest .'
+        sh 'docker build -t shereenfarag/dso-Lab:latest .'
       }
     }
     stage('Login') {
@@ -19,7 +19,7 @@ pipeline {
     }
     stage('Push') {
       steps {
-        sh 'docker push shereenfarag/DSO-Lab:latest'
+        sh 'docker push shereenfarag/dso-Lab:latest'
       }
     }
   }
